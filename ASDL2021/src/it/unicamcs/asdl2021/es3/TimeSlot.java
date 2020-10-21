@@ -43,24 +43,28 @@ public class TimeSlot implements Comparable<TimeSlot> {
      */
     public TimeSlot(GregorianCalendar start, GregorianCalendar stop) {
         // TODO implementare
-        this.start = null;
-        this.stop = null;
+        if(start==null||stop==null)
+            throw new NullPointerException();
+        if(start.after(stop)) {//se l'if è vero costruisci, altrimenti lancia eccezione
+            this.start = null;
+            this.stop = null;
+        }
+        else
+            throw new IllegalArgumentException();
     }
 
     /**
      * @return the start
      */
     public GregorianCalendar getStart() {
-        // TODO implementare
-        return null;
+        return start;
     }
 
     /**
      * @return the stop
      */
     public GregorianCalendar getStop() {
-        // TODO implementare
-        return null;
+        return stop;
     }
 
     /*
@@ -79,8 +83,10 @@ public class TimeSlot implements Comparable<TimeSlot> {
      */
     @Override
     public boolean equals(Object obj) {
-        // TODO implementare
-        return false;
+        if(this==obj) return true;//da fare:convertire obj in timeslot
+        if(obj==null|| getClass() != obj.getClass()) return false;
+        Prenotazione prenotazione = (Prenotazione) obj;
+        return aula.equals(prenotazione.aula);
     }
 
     /*
@@ -107,6 +113,8 @@ public class TimeSlot implements Comparable<TimeSlot> {
      *                                  se il time slot passato è nullo
      */
     public boolean overlapsWith(TimeSlot o) {
+        if(o==null)
+            throw new NullPointerException();
         // TODO implementare
         return false;
     }
