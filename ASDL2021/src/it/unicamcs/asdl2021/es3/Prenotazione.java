@@ -1,5 +1,7 @@
 package it.unicamcs.asdl2021.es3;
 
+import java.util.Objects;
+
 /**
  * Una prenotazione riguarda una certa aula per un certo time slot.
  * 
@@ -31,54 +33,53 @@ public class Prenotazione implements Comparable<Prenotazione> {
      *                                  se uno qualsiasi degli oggetti passati è
      *                                  null
      */
+
+
     public Prenotazione(String aula, TimeSlot timeSlot, String docente,
             String motivo) {
-        // TODO implementare
-        this.aula = null;
-        this.timeSlot = null;
-        this.docente = null;
-        this.motivo = null;
+        if(aula==null||timeSlot==null||docente==null||motivo==null)
+            throw new NullPointerException();
+        this.aula = aula;
+        this.timeSlot = timeSlot;
+        this.docente = docente;
+        this.motivo = motivo;
     }
 
     /**
      * @return the aula
      */
     public String getAula() {
-        // TODO implementare
-        return null;
+        return aula;
     }
 
     /**
      * @return the timeSlot
      */
     public TimeSlot getTimeSlot() {
-     // TODO implementare
-        return null;
+        return timeSlot;
     }
 
     /**
      * @return the docente
      */
     public String getDocente() {
-     // TODO implementare
-        return null;
+        return docente;
     }
 
     /**
      * @return the motivo
      */
     public String getMotivo() {
-     // TODO implementare
-        return null;
+        return motivo;
     }
+
 
     /*
      * Ridefinire in accordo con equals
      */
     @Override
     public int hashCode() {
-     // TODO implementare
-        return -1;
+        return Objects.hash(aula, timeSlot);
     }
 
     /*
@@ -87,8 +88,10 @@ public class Prenotazione implements Comparable<Prenotazione> {
      */
     @Override
     public boolean equals(Object obj) {
-     // TODO implementare
-        return false;
+    if(this==obj) return true;
+    if(obj==null|| getClass() != obj.getClass()) return false;
+    Prenotazione prenotazione = (Prenotazione) obj;
+    return aula.equals(prenotazione.aula) && timeSlot.equals(prenotazione.timeSlot);
     }
 
     /*
@@ -98,8 +101,12 @@ public class Prenotazione implements Comparable<Prenotazione> {
      */
     @Override
     public int compareTo(Prenotazione o) {
-     // TODO implementare
-        return 0;
+        if(this.aula==o.aula)//se l'aula è diversa, non c'è rischio di eventuali overlap. D'altro canto se è uguale, bisogna differenziare i timeSlot
+        {
+            if (this)
+                return 0;//una precede l'altra in base all' ordine aule (=0 coincidono)
+        }
+        return -1;
     }
 
     @Override
