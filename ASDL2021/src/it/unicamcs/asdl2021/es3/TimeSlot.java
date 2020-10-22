@@ -4,7 +4,9 @@
 package it.unicamcs.asdl2021.es3;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * Un time slot è un intervallo di tempo continuo che può essere associato ad
@@ -45,9 +47,9 @@ public class TimeSlot implements Comparable<TimeSlot> {
         // TODO implementare
         if(start==null||stop==null)
             throw new NullPointerException();
-        if(start.after(stop)) {//se l'if è vero costruisci, altrimenti lancia eccezione
-            this.start = null;
-            this.stop = null;
+        else if(start.before(stop)) {//se l'else if è vero costruisci, altrimenti lancia eccezione
+            this.start = start;
+            this.stop = stop;
         }
         else
             throw new IllegalArgumentException();
@@ -72,8 +74,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
      */
     @Override
     public int hashCode() {
-        // TODO implementare
-        return -1;
+        return Objects.hash(start,stop);
     }
 
     /*
@@ -83,10 +84,13 @@ public class TimeSlot implements Comparable<TimeSlot> {
      */
     @Override
     public boolean equals(Object obj) {
-        if(this==obj) return true;//da fare:convertire obj in timeslot
-        if(obj==null|| getClass() != obj.getClass()) return false;
-        Prenotazione prenotazione = (Prenotazione) obj;
-        return aula.equals(prenotazione.aula);
+        //if(this==obj) return true;//non credo sia necessario
+        if(obj==null|| this.getClass() != obj.getClass())
+            return false;
+        TimeSlot timeSlot = (TimeSlot) obj;
+        if (this.getStart().getTimeInMillis()==timeSlot.getStart().getTimeInMillis() && this.getStop().getTimeInMillis()==timeSlot.getStop().getTimeInMillis())
+            return true;
+        else return false;//standard return
     }
 
     /*
@@ -96,8 +100,15 @@ public class TimeSlot implements Comparable<TimeSlot> {
      */
     @Override
     public int compareTo(TimeSlot o) {
-        // TODO implementare
-        return 0;
+        if(this.getStart().before(o.getStart()))
+            return -1;
+        else if (!this.getStart().before(o.getStart()))//se non vanno entrambi gli if, teoricamente i getStart() coincidono
+            return 1;
+        else if(this.getStop().before(o.getStop()))//quindi si provvede a verificare quale dei due finsice prima
+            return -1;
+        else if(!this.getStop().before(o.getStop()))
+            return 1;
+        else return 0;//standard return(vuol dire che sia i getStart() che i getStop() coincidono)
     }
 
     /**
@@ -113,10 +124,25 @@ public class TimeSlot implements Comparable<TimeSlot> {
      *                                  se il time slot passato è nullo
      */
     public boolean overlapsWith(TimeSlot o) {
+        long millis; //se inizializzo la variabile l'ide me la segnala ridondante
         if(o==null)
             throw new NullPointerException();
-        // TODO implementare
-        return false;
+        if(o.getStart().after(this.getStart()) && this.getStop().before(o.getStop())) //cond 1 degli appunti cartacei
+        {
+            millis = (this.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
+            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+                return true;
+            else return false; //l'overlap inferiore ai 5 min non viene considerato
+        }
+
+        else if(this.getStart().after(o.getStart()) && o.getStop().before(this.getStop())) //cond 2 degli appunti cartacei (ho fatto un disegno)
+        {
+            millis = (this.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
+            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+                return true;
+            else return false; //l'overlap inferiore ai 5 min non viene considerato
+        }
+        return false;//standard return (non c'è overlap)
     }
 
     /*
@@ -125,8 +151,21 @@ public class TimeSlot implements Comparable<TimeSlot> {
      */
     @Override
     public String toString() {
-        // TODO implementare
-        return null;
+        int yearStart, yearStop;
+        String inizio, fine, range;
+
+        Date start = this.start.getTime();
+        Date stop = this.stop.getTime();
+
+        yearStart = start.getYear() + 1900;
+        yearStop = start.getYear() + 1900;
+
+        inizio = start.getDate() + "/" + start.getMonth() + "/" + yearStart + " " + start.getHours() + "." + start.getMinutes();
+        fine = stop.getDate() + "/" + stop.getMonth() + "/" + yearStop + " " + stop.getHours() + "." + stop.getMinutes();
+
+        range = "[" + inizio + " - " + fine + "]";
+
+        return range;
     }
 
 }
