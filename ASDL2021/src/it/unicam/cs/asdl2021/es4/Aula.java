@@ -1,6 +1,8 @@
 package it.unicam.cs.asdl2021.es4;
 
 
+import java.util.Objects;
+
 /**
  * Un oggetto della classe aula rappresenta una certa aula con le sue facilities
  * e le sue prenotazioni.
@@ -70,26 +72,23 @@ public class Aula implements Comparable<Aula> {
         this.location = location;
     }
 
-    /*
-     * Ridefinire in accordo con equals
-     */
     @Override
-    public int hashCode() {
-        // TODO implementare
-        return -1;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Aula aula = (Aula) o;
+        return nome.equals(aula.nome);
     }
 
-    /* Due aule sono uguali se e solo se hanno lo stesso nome */
     @Override
-    public boolean equals(Object obj) {
-        // TODO implementare
-        return false;
+    public int hashCode() {
+        return Objects.hash(nome);
     }
 
     /* L'ordinamento naturale si basa sul nome dell'aula */
     @Override
     public int compareTo(Aula o) {
-        // TODO implementare
+        if(this.getNome()>o.getNome()) return 1;
         return 0;
     }
 
@@ -97,48 +96,42 @@ public class Aula implements Comparable<Aula> {
      * @return the facilities
      */
     public Facility[] getFacilities() {
-        // TODO implementare
-        return null;
+        return facilities;
     }
 
     /**
      * @return il numero corrente di facilities
      */
     public int getNumeroFacilities() {
-        // TODO implementare
-        return -1;
+        return numFacilities;
     }
 
     /**
      * @return the nome
      */
     public String getNome() {
-        // TODO implementare
-        return null;
+        return nome;
     }
 
     /**
      * @return the location
      */
     public String getLocation() {
-        // TODO implementare
-        return null;
+        return location;
     }
 
     /**
      * @return the prenotazioni
      */
     public Prenotazione[] getPrenotazioni() {
-        // TODO implementare
-        return null;
+        return prenotazioni;
     }
 
     /**
      * @return il numero corrente di prenotazioni
      */
     public int getNumeroPrenotazioni() {
-        // TODO implementare
-        return -1;
+        return numPrenotazioni;
     }
 
     /**
