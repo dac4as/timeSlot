@@ -1,6 +1,7 @@
 package it.unicam.cs.asdl2021.es4;
 
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -88,8 +89,15 @@ public class Aula implements Comparable<Aula> {
     /* L'ordinamento naturale si basa sul nome dell'aula */
     @Override
     public int compareTo(Aula o) {
-        if(this.getNome()>o.getNome()) return 1;
-        return 0;
+        if(this.getNome().equals(o.getNome())) return 0; //se i nomi delle aule corrispondono ritorno 0
+        String[] array1={getNome().toLowerCase(),o.getNome().toLowerCase()};
+        String[] array2={getNome().toLowerCase(),o.getNome().toLowerCase()};
+        Arrays.sort(array2);
+        if(Arrays.equals(array1,array2))
+        {
+            return 1;
+        }
+        else return -1;
     }
 
     /**
@@ -167,7 +175,13 @@ public class Aula implements Comparable<Aula> {
      *                                  se il time slot passato è nullo
      */
     public boolean isFree(TimeSlot ts) {
-        // TODO implementare
+        if(ts==null)
+            throw new NullPointerException();
+        for(timeSlot:prenotazioni)
+        {
+            return true;
+        }
+
         return false;
     }
 
