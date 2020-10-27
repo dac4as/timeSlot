@@ -71,6 +71,7 @@ public class Aula implements Comparable<Aula> {
         // modificati.
         this.nome = nome;
         this.location = location;
+        this.prenotazioni= new Prenotazione[]{};
     }
 
     @Override
@@ -154,11 +155,13 @@ public class Aula implements Comparable<Aula> {
      *                                  se la facility passata è nulla
      */
     public boolean addFacility(Facility f) {
-        // TODO implementare
+        if(f==null)
+            throw new NullPointerException();
         // Nota: attenzione! Per controllare se una facility è già presente
         // bisogna usare il metodo equals della classe Facility.
         // Nota: attenzione bis! Si noti che per le sottoclassi di Facility non
         // è richiesto di ridefinire ulteriormente il metodo equals...
+
         return false;
     }
 
@@ -177,12 +180,13 @@ public class Aula implements Comparable<Aula> {
     public boolean isFree(TimeSlot ts) {
         if(ts==null)
             throw new NullPointerException();
-        for(timeSlot:prenotazioni)
-        {
+        if (getNumeroPrenotazioni()==0)//se la lista è vuota, evito di comparare, ergo è libera
             return true;
+        for(int i=0; i<getNumeroPrenotazioni();i++)
+        {
+            return ts.overlapsWith(prenotazioni[i].getTimeSlot());
         }
-
-        return false;
+        return true;//non ci sono prenotazioni, ergo è libera
     }
 
     /**
@@ -200,6 +204,7 @@ public class Aula implements Comparable<Aula> {
      */
     public boolean satisfiesFacilities(Facility[] requestedFacilities) {
         // TODO implementare
+
         return false;
     }
 
@@ -218,6 +223,15 @@ public class Aula implements Comparable<Aula> {
      *                                      richieste è nulla.
      */
     public void addPrenotazione(TimeSlot ts, String docente, String motivo) {
-        // TODO implementare
+        if(ts==null || docente==null || motivo==null)
+            throw new NullPointerException();
+        if(!isFree(ts))
+            throw new IllegalArgumentException();
+        Aula a =this;
+        Prenotazione p = new Prenotazione(a,ts,docente,motivo);
+        System.out.println(p);
+        System.out.println(this);
+        prenotazioni[numPrenotazioni]=p;
+        numPrenotazioni++;
     }
 }
