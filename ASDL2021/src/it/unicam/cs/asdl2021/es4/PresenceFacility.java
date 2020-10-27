@@ -13,6 +13,9 @@ package it.unicam.cs.asdl2021.es4;
  */
 public class PresenceFacility extends Facility {
 
+    private final String codice;
+
+    private final String descrizione;
     /**
      * Costruisce una presence facility.
      * 
@@ -24,7 +27,10 @@ public class PresenceFacility extends Facility {
      */
     public PresenceFacility(String codice, String descrizione) {
         super(codice, descrizione);
-        // TODO implementare
+        if(codice==null || descrizione==null)
+            throw new NullPointerException();
+        this.codice=codice;
+        this.descrizione=descrizione;
     }
 
     /*
@@ -34,8 +40,9 @@ public class PresenceFacility extends Facility {
      */
     @Override
     public boolean satisfies(Facility o) {
-        // TODO implementare
-        return false;
+        if(o instanceof PresenceFacility && this.getCodice().equals(o))
+            return true;
+        else return false;
     }
 
 }

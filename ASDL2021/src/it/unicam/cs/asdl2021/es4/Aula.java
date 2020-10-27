@@ -72,6 +72,7 @@ public class Aula implements Comparable<Aula> {
         this.nome = nome;
         this.location = location;
         this.prenotazioni= new Prenotazione[]{};
+        this.facilities= new Facility[]{};
     }
 
     @Override
@@ -159,10 +160,13 @@ public class Aula implements Comparable<Aula> {
             throw new NullPointerException();
         // Nota: attenzione! Per controllare se una facility è già presente
         // bisogna usare il metodo equals della classe Facility.
+        if(this.equals(f))//se è vero vuol dire che Facility è già presente, e non deve quindi essere aggiunto (return false)
+            return false;
         // Nota: attenzione bis! Si noti che per le sottoclassi di Facility non
         // è richiesto di ridefinire ulteriormente il metodo equals...
-
-        return false;
+        facilities[numFacilities]=f;//aggiungo f all'indice numFacilities
+        numFacilities++;
+        return true;
     }
 
     /**
@@ -203,7 +207,14 @@ public class Aula implements Comparable<Aula> {
      *                                  se il set di facility richieste è nullo
      */
     public boolean satisfiesFacilities(Facility[] requestedFacilities) {
-        // TODO implementare
+        if(requestedFacilities==null)
+            throw new NullPointerException();
+        for(Facility f:requestedFacilities)
+        {
+            if((f instanceof PresenceFacility && this.getFacilities().equals(requestedFacilities)) || (f instanceof QuantitativeFacility && this.getFacilities().equals(f)))
+                //non ho idea di cosa abbia fatto, ma nel dubbio
+                return true;
+        }
 
         return false;
     }
@@ -229,8 +240,8 @@ public class Aula implements Comparable<Aula> {
             throw new IllegalArgumentException();
         Aula a =this;
         Prenotazione p = new Prenotazione(a,ts,docente,motivo);
-        System.out.println(p);
-        System.out.println(this);
+        //System.out.println(p);
+        //System.out.println(this);//dice che è null ma non dovrebbe
         prenotazioni[numPrenotazioni]=p;
         numPrenotazioni++;
     }

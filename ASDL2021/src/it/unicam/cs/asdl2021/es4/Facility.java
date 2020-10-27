@@ -1,5 +1,7 @@
 package it.unicam.cs.asdl2021.es4;
 
+import java.util.Objects;
+
 /**
  * Una facility generica è una caratteristica o delle dotazioni che una certa
  * aula può avere. La classe va specificata ulteriormente per definire i diversi
@@ -26,43 +28,35 @@ public abstract class Facility {
      *                                  richieste è nulla.
      */
     public Facility(String codice, String descrizione) {
-        // TODO implementare
-        this.codice = null;
-        this.descrizione = null;
+        this.codice = codice;
+        this.descrizione = descrizione;
     }
 
     /**
      * @return the codice
      */
     public String getCodice() {
-        // TODO implementare
-        return null;
+        return codice;
     }
 
     /**
      * @return the descrizione
      */
     public String getDescrizione() {
-        // TODO implementare
-        return null;
+        return descrizione;
     }
 
-    /*
-     * Ridefinire in accordo con equals
-     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Facility facility = (Facility) o;
+        return codice.equals(facility.codice);
+    }
+
     @Override
     public int hashCode() {
-        // TODO implementare
-        return -1;
-    }
-
-    /*
-     * L'uguaglianza di due facilities è basata unicamente sul codice
-     */
-    @Override
-    public boolean equals(Object obj) {
-        // TODO implementare
-        return false;
+        return Objects.hash(codice);
     }
 
     @Override
@@ -88,5 +82,5 @@ public abstract class Facility {
      *                                  se la facility passata è nulla.
      */
     public abstract boolean satisfies(Facility o);
-
+    
 }
