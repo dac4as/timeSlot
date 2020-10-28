@@ -101,11 +101,11 @@ public class TimeSlot implements Comparable<TimeSlot> {
     public int compareTo(TimeSlot o) {
         if(this.getStart().before(o.getStart()))
             return -1;
-        else if (!this.getStart().before(o.getStart()))//se non vanno entrambi gli if, teoricamente i getStart() coincidono
+        else if (this.getStart().after(o.getStart()))//se non vanno entrambi gli if, teoricamente i getStart() coincidono
             return 1;
         else if(this.getStop().before(o.getStop()))//quindi si provvede a verificare quale dei due finsice prima
             return -1;
-        else if(!this.getStop().before(o.getStop()))
+        else if(this.getStop().after(o.getStop()))
             return 1;
         else return 0;//standard return(vuol dire che sia i getStart() che i getStop() coincidono)
     }
@@ -128,7 +128,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
             throw new NullPointerException();
         if(o.getStart().after(this.getStart()) && this.getStop().before(o.getStop())) //cond 1 degli appunti cartacei
         {
-            millis = (this.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
+            millis = (o.getStart().getTimeInMillis()-this.getStop().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
             if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
                 return true;
             else return false; //l'overlap inferiore ai 5 min non viene considerato
@@ -140,6 +140,22 @@ public class TimeSlot implements Comparable<TimeSlot> {
             if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
                 return true;
             else return false; //l'overlap inferiore ai 5 min non viene considerato
+        }
+
+        else if (this.getStart().after(o.getStart()) && this.getStop().before(o.getStop()))
+        {
+            millis=(getStop().getTimeInMillis()-getStart().getTimeInMillis())/60000;
+            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+                return true;
+            else return false;
+        }
+
+        else if(this.getStart().before(o.getStart()) && this.getStop().after(o.getStop()))
+        {
+            millis=(o.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;
+            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+                return true;
+            else return false;
         }
         return false;//standard return (non c'è overlap)
     }
@@ -159,8 +175,8 @@ public class TimeSlot implements Comparable<TimeSlot> {
         yearStart = start.getYear() + 1900;
         yearStop = start.getYear() + 1900;
 
-        inizio = start.getDate() + "/" + start.getMonth() + "/" + yearStart + " " + start.getHours() + "." + start.getMinutes();
-        fine = stop.getDate() + "/" + stop.getMonth() + "/" + yearStop + " " + stop.getHours() + "." + stop.getMinutes();
+        inizio = start.getDate() + "/" + (start.getMonth()+1) + "/" + yearStart + " " + start.getHours() + "." + start.getMinutes();
+        fine = stop.getDate() + "/" + (stop.getMonth()+1) + "/" + yearStop + " " + stop.getHours() + "." + stop.getMinutes();
 
         range = "[" + inizio + " - " + fine + "]";
 

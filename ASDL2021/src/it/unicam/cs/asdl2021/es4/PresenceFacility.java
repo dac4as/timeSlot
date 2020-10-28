@@ -34,15 +34,20 @@ public class PresenceFacility extends Facility {
     }
 
     /*
-     * Una Presence Facility soddisfa una facility solo se la facility passata è
+     * Una Presence Facility soddisfa una facility solo *SOLO* se la facility passata è
      * una Presence Facility ed ha lo stesso codice.
-     * 
+     *
+     * Non è stato specificato che va un NullPointerEx qui
      */
     @Override
     public boolean satisfies(Facility o) {
-        if(o instanceof PresenceFacility && this.getCodice().equals(o))
+        if(o==null)
+            throw new NullPointerException();
+        if(o instanceof PresenceFacility && (this.getCodice().equals(o) || this.getCodice()==o.getCodice()))
             return true;
-        else return false;
+        else
+            return false;
+
     }
 
 }

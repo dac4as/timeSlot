@@ -71,8 +71,10 @@ public class Aula implements Comparable<Aula> {
         // modificati.
         this.nome = nome;
         this.location = location;
-        this.prenotazioni= new Prenotazione[]{};
-        this.facilities= new Facility[]{};
+        this.prenotazioni= new Prenotazione[INIT_NUM_PRENOTAZIONI];
+        this.facilities= new Facility[INIT_NUM_FACILITIES];
+        //this.numFacilities=numFacilities;
+        //this.numPrenotazioni=numPrenotazioni;
     }
 
     @Override
@@ -160,8 +162,9 @@ public class Aula implements Comparable<Aula> {
             throw new NullPointerException();
         // Nota: attenzione! Per controllare se una facility è già presente
         // bisogna usare il metodo equals della classe Facility.
-        if(this.equals(f))//se è vero vuol dire che Facility è già presente, e non deve quindi essere aggiunto (return false)
-            return false;
+        for(int i=0;i<getNumeroFacilities();i++)
+            if(f.equals(this.getFacilities()))//se è vero vuol dire che Facility è già presente, e non deve quindi essere aggiunto (return false)
+                return false;
         // Nota: attenzione bis! Si noti che per le sottoclassi di Facility non
         // è richiesto di ridefinire ulteriormente il metodo equals...
         facilities[numFacilities]=f;//aggiungo f all'indice numFacilities
@@ -238,10 +241,13 @@ public class Aula implements Comparable<Aula> {
             throw new NullPointerException();
         if(!isFree(ts))
             throw new IllegalArgumentException();
-        Aula a =this;
-        Prenotazione p = new Prenotazione(a,ts,docente,motivo);
-        //System.out.println(p);
-        //System.out.println(this);//dice che è null ma non dovrebbe
+        /*for(Prenotazione p:this.getPrenotazioni())
+            if (p.getTimeSlot().overlapsWith(ts))
+                throw new IllegalArgumentException();*/
+        for(int i=0;i<getNumeroPrenotazioni();i++)
+            if(this.prenotazioni[i].getTimeSlot().overlapsWith(ts) || !isFree(this.prenotazioni[i].getTimeSlot()))
+                throw new IllegalArgumentException();
+        Prenotazione p = new Prenotazione(this,ts,docente,motivo);//dice che p è null
         prenotazioni[numPrenotazioni]=p;
         numPrenotazioni++;
     }

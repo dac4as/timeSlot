@@ -40,7 +40,7 @@ public class QuantitativeFacility extends Facility {
             throw new NullPointerException();
         this.codice=codice;
         this.descrizione=descrizione;
-        this.quantity = 0;
+        this.quantity = quantity;
     }
 
     /**
@@ -55,10 +55,14 @@ public class QuantitativeFacility extends Facility {
      * facility data è una quantitative facility, ha lo stesso codice e la
      * quantità associata a questa facility è maggiore o uguale alla quantità
      * della facility data.
+     *
+     * Anche qui non è stato specificato il NullPointer
      */
     @Override
     public boolean satisfies(Facility o) {
-        if(o instanceof QuantitativeFacility && this.getCodice().equals(o) && this.getQuantity()>=((QuantitativeFacility) o).getQuantity())
+        if(o==null)
+            throw new NullPointerException();
+        if(o instanceof QuantitativeFacility && (this.getCodice().equals(o)|| this.getCodice()==o.getCodice()) && this.getQuantity()>=((QuantitativeFacility) o).getQuantity())
             return true;
         else return false;
     }
