@@ -43,7 +43,7 @@ public class PresenceFacility extends Facility {
     public boolean satisfies(Facility o) {
         if(o==null)
             throw new NullPointerException();
-        if(o instanceof PresenceFacility && (this.getCodice().equals(o) || this.getCodice()==o.getCodice()))
+        if(o instanceof PresenceFacility && (this.getCodice().equals(o.getCodice()) || this.getCodice()==o.getCodice()))
             return true;
         else
             return false;

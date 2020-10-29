@@ -126,18 +126,18 @@ public class TimeSlot implements Comparable<TimeSlot> {
         long millis; //se inizializzo la variabile l'ide me la segnala ridondante
         if(o==null)
             throw new NullPointerException();
-        if(o.getStart().after(this.getStart()) && this.getStop().before(o.getStop())) //cond 1 degli appunti cartacei
+        if(o.getStart().after(this.getStart()) && this.getStop().before(o.getStop()) && this.getStop().after(o.getStart())) //cond 1 degli appunti cartacei
         {
-            millis = (o.getStart().getTimeInMillis()-this.getStop().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
-            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+            millis = (this.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
+            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
                 return true;
             else return false; //l'overlap inferiore ai 5 min non viene considerato
         }
 
-        else if(this.getStart().after(o.getStart()) && o.getStop().before(this.getStop())) //cond 2 degli appunti cartacei (ho fatto un disegno)
+        else if(this.getStart().after(o.getStart()) && o.getStop().before(this.getStop()) && this.getStart().before(o.getStop())) //cond 2 degli appunti cartacei (ho fatto un disegno)
         {
-            millis = (this.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
-            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+            millis = (o.getStop().getTimeInMillis()-this.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
+            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
                 return true;
             else return false; //l'overlap inferiore ai 5 min non viene considerato
         }
@@ -145,7 +145,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
         else if (this.getStart().after(o.getStart()) && this.getStop().before(o.getStop()))
         {
             millis=(getStop().getTimeInMillis()-getStart().getTimeInMillis())/60000;
-            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
                 return true;
             else return false;
         }
@@ -153,7 +153,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
         else if(this.getStart().before(o.getStart()) && this.getStop().after(o.getStop()))
         {
             millis=(o.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;
-            if(millis>=MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
+            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
                 return true;
             else return false;
         }

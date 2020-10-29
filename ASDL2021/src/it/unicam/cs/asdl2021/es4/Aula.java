@@ -158,18 +158,25 @@ public class Aula implements Comparable<Aula> {
      *                                  se la facility passata è nulla
      */
     public boolean addFacility(Facility f) {
-        if(f==null)
+        if (f == null)
             throw new NullPointerException();
         // Nota: attenzione! Per controllare se una facility è già presente
         // bisogna usare il metodo equals della classe Facility.
-        for(int i=0;i<getNumeroFacilities();i++)
-            if(f.equals(this.getFacilities()))//se è vero vuol dire che Facility è già presente, e non deve quindi essere aggiunto (return false)
+        for (int i = 0; i < getNumeroFacilities(); i++)
+            if (f.equals(this.facilities[i]))//se è vero vuol dire che Facility è già presente, e non deve quindi essere aggiunto (return false)
                 return false;
         // Nota: attenzione bis! Si noti che per le sottoclassi di Facility non
         // è richiesto di ridefinire ulteriormente il metodo equals...
-        facilities[numFacilities]=f;//aggiungo f all'indice numFacilities
-        numFacilities++;
-        return true;
+        try {
+            this.facilities[numFacilities] = f;
+            numFacilities++;
+            return true;
+        } catch (Exception ArrayIndexOutOfBoundsException) {
+            facilities = new Facility[numFacilities * 2];
+            facilities[getNumeroFacilities()] = f;//aggiungo f all'indice numFacilities
+            numFacilities++;
+            return true;
+        }
     }
 
     /**
@@ -187,11 +194,12 @@ public class Aula implements Comparable<Aula> {
     public boolean isFree(TimeSlot ts) {
         if(ts==null)
             throw new NullPointerException();
-        if (getNumeroPrenotazioni()==0)//se la lista è vuota, evito di comparare, ergo è libera
-            return true;
+        /*if (getNumeroPrenotazioni()==0)//se la lista è vuota, evito di comparare, ergo è libera
+            return true;*/
         for(int i=0; i<getNumeroPrenotazioni();i++)
         {
-            return ts.overlapsWith(prenotazioni[i].getTimeSlot());
+            if(ts.overlapsWith(prenotazioni[i].getTimeSlot()))
+                    return false;
         }
         return true;//non ci sono prenotazioni, ergo è libera
     }
@@ -212,13 +220,27 @@ public class Aula implements Comparable<Aula> {
     public boolean satisfiesFacilities(Facility[] requestedFacilities) {
         if(requestedFacilities==null)
             throw new NullPointerException();
-        for(Facility f:requestedFacilities)
+        int arrNull=0;
+        int reqs=0;
+        for(int i=0;i<requestedFacilities.length;i++)
         {
-            if((f instanceof PresenceFacility && this.getFacilities().equals(requestedFacilities)) || (f instanceof QuantitativeFacility && this.getFacilities().equals(f)))
-                //non ho idea di cosa abbia fatto, ma nel dubbio
+            if(requestedFacilities[i]==null)
+                arrNull++;
+        }
+
+        if(arrNull==requestedFacilities.length)
+            return true;
+
+        for(int i=0;i<getNumeroFacilities();i++)
+        {
+            for(int k=0;k<requestedFacilities.length;k++)
+            if((this.facilities[i].satisfies(requestedFacilities[k])))
+                //reqs++;
                 return true;
         }
 
+        //if(reqs==requestedFacilities.length)
+          //  return true;
         return false;
     }
 

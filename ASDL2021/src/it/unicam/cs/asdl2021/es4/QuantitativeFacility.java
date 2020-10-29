@@ -15,9 +15,6 @@ public class QuantitativeFacility extends Facility {
 
     private final int quantity;
 
-    private final String codice;
-
-    private final String descrizione;
 
     /**
      * Costruisce una facility quantitativa.
@@ -38,8 +35,6 @@ public class QuantitativeFacility extends Facility {
         super(codice, descrizione);
         if(codice==null || descrizione==null)
             throw new NullPointerException();
-        this.codice=codice;
-        this.descrizione=descrizione;
         this.quantity = quantity;
     }
 
@@ -62,7 +57,7 @@ public class QuantitativeFacility extends Facility {
     public boolean satisfies(Facility o) {
         if(o==null)
             throw new NullPointerException();
-        if(o instanceof QuantitativeFacility && (this.getCodice().equals(o)|| this.getCodice()==o.getCodice()) && this.getQuantity()>=((QuantitativeFacility) o).getQuantity())
+        if(o instanceof QuantitativeFacility && (this.getCodice().equals(o.getCodice())|| this.getCodice()==o.getCodice()) && this.getQuantity()>=((QuantitativeFacility) o).getQuantity())
             return true;
         else return false;
     }
