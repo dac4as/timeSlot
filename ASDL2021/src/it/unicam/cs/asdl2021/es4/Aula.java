@@ -172,7 +172,7 @@ public class Aula implements Comparable<Aula> {
             numFacilities++;
             return true;
         } catch (Exception ArrayIndexOutOfBoundsException) {
-            facilities = new Facility[numFacilities * 2];
+            facilities = new Facility[numFacilities * 2];//sarebbe stato figo usare Arrays.copyOf() ma solo con metodi statici
             facilities[getNumeroFacilities()] = f;//aggiungo f all'indice numFacilities
             numFacilities++;
             return true;
@@ -221,7 +221,7 @@ public class Aula implements Comparable<Aula> {
         if(requestedFacilities==null)
             throw new NullPointerException();
         int arrNull=0;
-        int reqs=0;
+        //int reqs=0;
         for(int i=0;i<requestedFacilities.length;i++)
         {
             if(requestedFacilities[i]==null)
@@ -233,8 +233,8 @@ public class Aula implements Comparable<Aula> {
 
         for(int i=0;i<getNumeroFacilities();i++)
         {
-            for(int k=0;k<requestedFacilities.length;k++)
-            if((this.facilities[i].satisfies(requestedFacilities[k])))
+            for(int k=0;k<this.numFacilities;k++)//this.nuFacilities, non le requested.
+            if((this.facilities[k].equals(requestedFacilities[i])))
                 //reqs++;
                 return true;
         }

@@ -26,7 +26,7 @@ public class PresenceFacility extends Facility {
      *                                  richieste è nulla.
      */
     public PresenceFacility(String codice, String descrizione) {
-        super(codice, descrizione);
+        super(codice, descrizione);//costruttore della superclasse
         if(codice==null || descrizione==null)
             throw new NullPointerException();
         this.codice=codice;

@@ -34,8 +34,8 @@ public class QuantitativeFacility extends Facility {
             int quantity) {
         super(codice, descrizione);
         if(codice==null || descrizione==null)
-            throw new NullPointerException();
-        this.quantity = quantity;
+            throw new NullPointerException();//ridondante perchè l'eccezione è già gestita dalla superclasse
+        this.quantity = quantity;//andrebbe però gestita questa eccezione, anche se non specificato dall'api
     }
 
     /**
@@ -61,5 +61,7 @@ public class QuantitativeFacility extends Facility {
             return true;
         else return false;
     }
-
+//lmao prof says:
+// && = AND pigro
+// & = AND stakanovista
 }
