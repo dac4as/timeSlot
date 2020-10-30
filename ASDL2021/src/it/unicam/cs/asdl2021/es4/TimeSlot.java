@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author Template: Luca Tesei, Implementation: Collective
  *
  */
-public class TimeSlot implements Comparable<TimeSlot> {
+public class TimeSlot implements Comparable<TimeSlot> {//"questa classe definisce l'ordinamento naturale di timeslot"
 
     /**
      * Rappresenta la soglia di tolleranza da considerare nella sovrapposizione
@@ -46,8 +46,8 @@ public class TimeSlot implements Comparable<TimeSlot> {
     public TimeSlot(GregorianCalendar start, GregorianCalendar stop) {
         if(start==null||stop==null)
             throw new NullPointerException();
-        else if(start.before(stop)) {//se l'else if è vero costruisci, altrimenti lancia eccezione
-            this.start = start;
+        else if(start.before(stop)) {//se l'else if è vero costruisci, altrimenti lancia eccezione. Manca l'equals per vedere se corrispondono start.equals(stop)
+            this.start = start;//andava anche bene il start.compareTo(stop)
             this.stop = stop;
         }
         else
@@ -76,6 +76,15 @@ public class TimeSlot implements Comparable<TimeSlot> {
         return Objects.hash(start,stop);
     }
 
+    /*
+    public int hashCode()
+    {
+        int result = numero primo;
+        result = 31 * result + this.start.hashCode();
+        result = 31 * result + this.stop.hashCode();
+        return result;
+    }
+*/
     /*
      * Un time slot è uguale a un altro se rappresenta esattamente lo stesso
      * intervallo di tempo, cioè se inizia nello stesso istante e termina nello
@@ -165,7 +174,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
      * [10/11/2019 11.15 - 10/11/2019 23.45]
      */
     @Override
-    public String toString() {
+    public String toString() {//è altamente consigliato STRINGBUFFER (java.lang) e metodo append()
         int yearStart, yearStop;
         String inizio, fine, range;
 
