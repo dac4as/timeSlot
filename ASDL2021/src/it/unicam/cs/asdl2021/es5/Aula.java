@@ -149,14 +149,14 @@ public class Aula implements Comparable<Aula> {
         // rispondere in maniera efficiente
         if (ts==null)
             throw new NullPointerException();
-        for(int i=0;i<prenotazioni.toArray().length;i++)
-        {
-            if (prenotazioni.contains(ts)) {
+        Iterator<Prenotazione> iterator = prenotazioni.iterator();
 
-            }
+        while (iterator.hasNext()) {
+            if(ts.overlapsWith(iterator.next().getTimeSlot()))
+                return false;
         }
-        return false;
-    }
+        return true;
+        }
 
     /**
      * Determina se questa aula soddisfa tutte le facilities richieste
@@ -193,6 +193,7 @@ public class Aula implements Comparable<Aula> {
         Prenotazione p=new Prenotazione(this,ts,docente,motivo);
         if(isFree(ts))
             prenotazioni.add(p);
+        else throw new IllegalArgumentException();
     }
 
     /**
@@ -223,8 +224,19 @@ public class Aula implements Comparable<Aula> {
      *                                  se il punto nel tempo passato è nullo.
      */
     public boolean removePrenotazioniBefore(GregorianCalendar timePoint) {
-        // TODO implementare - sfruttare l'ordinamento tra le prenotazioni per
+        //sfruttare l'ordinamento tra le prenotazioni per
         // eseguire in maniera efficiente
-        return false;
+        if(timePoint==null)
+            throw new NullPointerException();
+        Iterator<Prenotazione> iterator = prenotazioni.iterator();
+        boolean flag=false;
+
+        while (iterator.hasNext()) {
+            if(iterator.next().getTimeSlot().getStart().before(timePoint) || iterator.next().getTimeSlot().getStart().equals(timePoint))
+                prenotazioni.remove(iterator.next());
+            flag=true;
+        }
+        return flag;
     }
 }
+
