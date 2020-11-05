@@ -18,8 +18,7 @@ public class GestoreAule {
      * Crea un gestore vuoto.
      */
     public GestoreAule() {
-        // TODO implementare
-        this.aule = null;
+        this.aule = new HashSet<Aula>();
     }
 
     /**
@@ -32,16 +31,16 @@ public class GestoreAule {
      *                                  se l'aula passata è nulla
      */
     public boolean addAula(Aula a) {
-        // TODO implementare
-        return false;
+        if(a==null)
+            throw new NullPointerException();
+        return aule.add(a);
     }
 
     /**
      * @return the aule
      */
     public Set<Aula> getAule() {
-        // TODO implementare
-        return null;
+        return aule;
     }
 
     /**
@@ -65,8 +64,15 @@ public class GestoreAule {
      */
     public Set<Aula> cercaAuleLibere(Set<Facility> requestedFacilities,
             TimeSlot ts) {
-        // TODO implementare
-        return null;
+        if(requestedFacilities==null || ts==null)
+            throw new NullPointerException();
+        Set<Aula> app = new HashSet<>();
+        for (Aula a : aule){
+            if (a.satisfiesFacilities(requestedFacilities) && a.isFree(ts)){
+                app.add(a);
+            }
+        }
+        return app;
     }
 
 }

@@ -28,6 +28,7 @@ public class TimeSlot implements Comparable<TimeSlot> {//"questa classe definisc
     private final GregorianCalendar start;
 
     private final GregorianCalendar stop;
+    private final int minuStart,minuStop;
 
     /**
      * Crea un time slot tra due istanti di inizio e fine
@@ -49,6 +50,8 @@ public class TimeSlot implements Comparable<TimeSlot> {//"questa classe definisc
         else if(start.before(stop)) {//se l'else if è vero costruisci, altrimenti lancia eccezione. Manca l'equals per vedere se corrispondono start.equals(stop)
             this.start = start;//andava anche bene il start.compareTo(stop)
             this.stop = stop;
+            minuStart= (int) (this.start.getTimeInMillis()/60000);
+            minuStop= (int) (this.stop.getTimeInMillis()/60000);
         }
         else
             throw new IllegalArgumentException();
@@ -66,6 +69,14 @@ public class TimeSlot implements Comparable<TimeSlot> {//"questa classe definisc
      */
     public GregorianCalendar getStop() {
         return stop;
+    }
+
+    public int getMinuStart() {
+        return minuStart;
+    }
+
+    public int getMinuStop() {
+        return minuStop;
     }
 
     /*
@@ -132,41 +143,11 @@ public class TimeSlot implements Comparable<TimeSlot> {//"questa classe definisc
      *                                  se il time slot passato è nullo
      */
     public boolean overlapsWith(TimeSlot o) {
-        long millis; //se inizializzo la variabile l'ide me la segnala ridondante
         if(o==null)
             throw new NullPointerException();
-        if(o.getStart().after(this.getStart()) && this.getStop().before(o.getStop()) && this.getStop().after(o.getStart())) //cond 1 degli appunti cartacei
-        {
-            millis = (this.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
-            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
-                return true;
-            else return false; //l'overlap inferiore ai 5 min non viene considerato
-        }
-
-        else if(this.getStart().after(o.getStart()) && o.getStop().before(this.getStop()) && this.getStart().before(o.getStop())) //cond 2 degli appunti cartacei (ho fatto un disegno)
-        {
-            millis = (o.getStop().getTimeInMillis()-this.getStart().getTimeInMillis())/60000;//prendo i millis ma li converto subito in minuti
-            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
-                return true;
-            else return false; //l'overlap inferiore ai 5 min non viene considerato
-        }
-
-        else if (this.getStart().after(o.getStart()) && this.getStop().before(o.getStop()))
-        {
-            millis=(getStop().getTimeInMillis()-getStart().getTimeInMillis())/60000;
-            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
-                return true;
-            else return false;
-        }
-
-        else if(this.getStart().before(o.getStart()) && this.getStop().after(o.getStop()))
-        {
-            millis=(o.getStop().getTimeInMillis()-o.getStart().getTimeInMillis())/60000;
-            if(millis>MINUTES_OF_TOLERANCE_FOR_OVERLAPPING)
-                return true;
-            else return false;
-        }
-        return false;//standard return (non c'è overlap)
+        int oMinStart= o.getMinuStart();
+        int oMinStop= o.getMinuStop();
+        return ((Math.max(oMinStart, minuStart)) < ((Math.min(minuStop, oMinStop)) - MINUTES_OF_TOLERANCE_FOR_OVERLAPPING));
     }
 
     /*

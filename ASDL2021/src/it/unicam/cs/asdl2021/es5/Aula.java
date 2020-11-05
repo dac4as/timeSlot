@@ -149,10 +149,9 @@ public class Aula implements Comparable<Aula> {
         // rispondere in maniera efficiente
         if (ts==null)
             throw new NullPointerException();
-        Iterator<Prenotazione> iterator = prenotazioni.iterator();
-
-        while (iterator.hasNext()) {
-            if(ts.overlapsWith(iterator.next().getTimeSlot()))
+        for(Prenotazione p :prenotazioni)
+        {
+            if(p.getTimeSlot().overlapsWith(ts))
                 return false;
         }
         return true;
@@ -171,8 +170,15 @@ public class Aula implements Comparable<Aula> {
      *                                  se il set di facility richieste è nullo
      */
     public boolean satisfiesFacilities(Set<Facility> requestedFacilities) {
-        // TODO implementare
-        return false;
+        if (requestedFacilities == null)
+            throw new NullPointerException();
+        int numRequestedFacilities = requestedFacilities.size();
+        for (Facility f : requestedFacilities) {
+            if (facilities.contains(f)) {
+                numRequestedFacilities--;
+            }
+        }
+        return numRequestedFacilities == 0;
     }
 
     /**
@@ -190,10 +196,12 @@ public class Aula implements Comparable<Aula> {
      *                                      richieste è nulla.
      */
     public void addPrenotazione(TimeSlot ts, String docente, String motivo) {
+        if(ts==null || docente==null || motivo==null)
+            throw new NullPointerException();
         Prenotazione p=new Prenotazione(this,ts,docente,motivo);
-        if(isFree(ts))
-            prenotazioni.add(p);
-        else throw new IllegalArgumentException();
+        if(!isFree(ts))
+            throw new IllegalArgumentException();
+        else prenotazioni.add(p);
     }
 
     /**
@@ -228,15 +236,17 @@ public class Aula implements Comparable<Aula> {
         // eseguire in maniera efficiente
         if(timePoint==null)
             throw new NullPointerException();
-        Iterator<Prenotazione> iterator = prenotazioni.iterator();
         boolean flag=false;
-
-        while (iterator.hasNext()) {
-            if(iterator.next().getTimeSlot().getStart().before(timePoint) || iterator.next().getTimeSlot().getStart().equals(timePoint))
-                prenotazioni.remove(iterator.next());
-            flag=true;
+        for(Prenotazione p : new TreeSet<>(prenotazioni))//devo inizializzare una copia e iterarla, sennò gliela tolgo da sotto le mani
+        {
+            if(p.getTimeSlot().getStart().before(timePoint) || p.getTimeSlot().getStart().equals(timePoint))
+            {
+                prenotazioni.remove(p);
+                flag = true;
+            }
         }
         return flag;
     }
-}
+    }
+
 
