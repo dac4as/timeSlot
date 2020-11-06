@@ -241,8 +241,7 @@ public class Aula implements Comparable<Aula> {
         {
             if(p.getTimeSlot().getStart().before(timePoint) || p.getTimeSlot().getStart().equals(timePoint))
             {
-                prenotazioni.remove(p);
-                flag = true;
+                flag = prenotazioni.remove(p);
             }
         }
         return flag;

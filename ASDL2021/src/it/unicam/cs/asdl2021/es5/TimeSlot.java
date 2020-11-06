@@ -147,7 +147,7 @@ public class TimeSlot implements Comparable<TimeSlot> {//"questa classe definisc
             throw new NullPointerException();
         int oMinStart= o.getMinuStart();
         int oMinStop= o.getMinuStop();
-        return ((Math.max(oMinStart, minuStart)) < ((Math.min(minuStop, oMinStop)) - MINUTES_OF_TOLERANCE_FOR_OVERLAPPING));
+        return ((Math.max(oMinStart, minuStart)) < ((Math.min(minuStop, oMinStop)) - MINUTES_OF_TOLERANCE_FOR_OVERLAPPING));//da rendere umanamente leggibile
     }
 
     /*
